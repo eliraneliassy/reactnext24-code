@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, computed, effect, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,5 +9,24 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'signals';
+  counter = signal<number>(0);
+
+  isEven = computed<string>
+  (() => this.counter() % 2 === 0 ? 'Even': 'Odd')
+
+  name = signal<string>('Eliran');
+
+  plus() {
+    this.counter.update(c => c + 1);
+  }
+
+  changeName() {
+    this.name.set('Yanai');
+  }
+
+  constructor() {
+    effect(() => {
+      console.log('Counter is' , this.counter(), this.name())
+    });
+  }
 }
