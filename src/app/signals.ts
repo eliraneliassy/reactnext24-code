@@ -23,7 +23,7 @@ export function createSignal<T>(value: T):
 
 export interface Runner {
   execute: () => void;
-  dependencies: Set<any>
+  dependencies: Set<Set<Runner>>;
 
 }
 
@@ -36,7 +36,7 @@ export function subscribe(running: Runner, subscriptions: Set<Runner>) {
 
 export function cleanup(running: Runner) {
   for(const dep of running.dependencies){
-    dep.delete();
+    dep.delete(running);
   }
 
   running.dependencies.clear();
@@ -56,7 +56,7 @@ export function effect(fn: () => unknown) {
 
   const running ={
     execute,
-    dependencies: new Set()
+    dependencies: new Set<Set<Runner>>()
   };
 
   execute();
